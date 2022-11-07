@@ -106,16 +106,37 @@ System.out.println(count + " pets added.");
 // Update pet.
 
 private static void updateExistingPet(Scanner cin) {
+
+viewAllPets();
 System.out.print("Enter the pet ID you want to update: ");
+int id = cin.nextInt();
+cin.nextLine();
+System.out.print("Enter new name and new age: ");
+String petString = cin.nextLine();
+String name = petString.split("\\s+")[0];
+int age = Integer.parseInt(petString.split("\\s+")[1]);
+String oldName = pets.get(id).getName();
+int oldAge = pets.get(id).getAge();
+pets.get(id).setName(name);
+pets.get(id).setAge(age);
+
+System.out.println(oldName + " " + oldAge + " changed to " + name + " " + age);
 }
 
 // Removes the pet.
 
 private static void removeExistingPet(Scanner cin) {
 
+viewAllPets();
 System.out.print("Enter the pet ID to remove: ");
-
+int id = cin.nextInt();
+cin.nextLine();
+String name = pets.get(id).getName();
+int age = pets.get(id).getAge();
+pets.remove(id);
+System.out.println(name + " " + age + " is removed.");
 }
+
 
 // Search name.
 
