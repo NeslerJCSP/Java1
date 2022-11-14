@@ -14,6 +14,8 @@ import java.io.ObjectOutputStream;
 /**
  *
  * @author Jake Nesler 
+ * csc 422 Release 4
+ * 
  */
 public class JavaApplication2 {
  /** The pets. */
@@ -29,10 +31,7 @@ public static void main(String[] args) throws FileNotFoundException, IOException
 pets = new ArrayList<>();
 syncPetData();
     
-    
-    
 Scanner cin = new Scanner(System.in);
-
 int option;
 do {
 menu();
@@ -64,11 +63,8 @@ switch (option) {
 cin.close();
 }
 
- 
  // view pets.
- 
 private static void viewAllPets() {
-
 System.out.println("+---------------------------------------+");
 System.out.printf("|%5s%5s%10s%10s%5s%5s\n", "ID", "|", "NAME", "|", "AGE", "|");
 System.out.println("+---------------------------------------+");
@@ -85,7 +81,6 @@ System.out.println((i) + " rows in set.");
 
 
 private static void saveFile() throws IOException {
-  
  try {
 // open a file to write
     FileWriter file = new FileWriter("C:\\Users\\Mobile Gaming\\Desktop\\javaPets.txt");
@@ -101,7 +96,6 @@ e.printStackTrace();
 }
 }
 
-
 //Adds pets.
 private static void addMorePets(Scanner cin) {
 int count = 0;
@@ -116,15 +110,33 @@ break;
 }
 String name = petString.split("\\s+")[0];
 int age = Integer.parseInt(petString.split("\\s+")[1]);
-
-pets.add(new Pet(name, age));
-count++;
+if(petString.split(" ").length != 2)
+{
+    System.out.println("Invalid input");
+}
+else if (age < 1 || age > 20)
+{
+    System.out.println("Pet is an invalid age.");
+}
+else
+{
+    if(pets.size()<5) {
+        pets.add(new Pet(name, age));
+        count++;
+    }
+    else
+    {
+        System.out.println("Database is full! ");
+        petString = "done";
+    }
+}
+ 
 
 } while (!petString.equalsIgnoreCase("done"));
 System.out.println(count + " pets added.");
 }
+
 //Read in file, update pet
- 
 private static void syncPetData(  ) throws FileNotFoundException {
     File file = new File("C:\\Users\\Mobile Gaming\\Desktop\\javaPets.txt");
  
@@ -148,9 +160,7 @@ private static void syncPetData(  ) throws FileNotFoundException {
  
   
 // Update pet.
-
 private static void updateExistingPet(Scanner cin) {
-
 viewAllPets();
 System.out.print("Enter the pet ID you want to update: ");
 int id = cin.nextInt();
@@ -163,27 +173,32 @@ String oldName = pets.get(id).getName();
 int oldAge = pets.get(id).getAge();
 pets.get(id).setName(name);
 pets.get(id).setAge(age);
-
 System.out.println(oldName + " " + oldAge + " changed to " + name + " " + age);
 }
 
 // Removes the pet.
-
 private static void removeExistingPet(Scanner cin) {
-
 viewAllPets();
 System.out.print("Enter the pet ID to remove: ");
 int id = cin.nextInt();
 cin.nextLine();
+if(id < pets.size() && id > 0)
+{
 String name = pets.get(id).getName();
 int age = pets.get(id).getAge();
 pets.remove(id);
 System.out.println(name + " " + age + " is removed.");
 }
+else 
+{
+    System.out.println("Out of bounds, The array has a minimum index of 0 and maximum of " + pets.size());
+}
+}
 
 
+
+/*
 // Search name.
-
 private static void searchByPetName(Scanner cin) {
 
 System.out.print("Enter name to search: ");
@@ -230,7 +245,7 @@ System.out.println((i) + "rows in set.");
 }
 
 // Menu.
-
+*/
 public static void menu() {
 
 System.out.println("What would like to do?");
