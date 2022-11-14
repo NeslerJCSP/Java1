@@ -5,6 +5,12 @@
 package javaapplication2;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;   
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 /**
  *
  * @author Jake Nesler 
@@ -18,10 +24,15 @@ static ArrayList<Pet> pets;
 *
 * @param args the arguments
 */
-public static void main(String[] args) {
-
-Scanner cin = new Scanner(System.in);
+public static void main(String[] args) throws FileNotFoundException, IOException   {
+    
 pets = new ArrayList<>();
+syncPetData();
+    
+    
+    
+Scanner cin = new Scanner(System.in);
+
 int option;
 do {
 menu();
@@ -29,6 +40,7 @@ System.out.print("Your chioce: ");
 option = cin.nextInt();
 cin.nextLine();
 switch (option) {
+ 
     case 1:
         viewAllPets();
     break;
@@ -36,27 +48,18 @@ switch (option) {
         addMorePets(cin);
     break;
     case 3:
-        updateExistingPet(cin);
-    break;
-    case 4:
         removeExistingPet(cin);
     break;
-    case 5:
-        searchByPetName(cin);
-    break;
-    case 6:
-        searchByPetAge(cin);
-    break;
-    case 7:
+    case 4:
         System.out.println("Thank you for using PDBMS :)");
+        saveFile();
     break;
-
     default:
-System.out.println("Invalid choice!");
-break;
+        System.out.println("Invalid choice!");
+    break;
 }
 
-} while (option != 7);
+} while (option != 4);
 
 cin.close();
 }
@@ -80,15 +83,33 @@ System.out.println("+---------------------------------------+");
 System.out.println((i) + " rows in set.");
 }
 
-//Adds pets.
 
-private static void addMorePets(Scanner scan) {
+private static void saveFile() throws IOException {
+  
+ try {
+// open a file to write
+    FileWriter file = new FileWriter("C:\\Users\\Mobile Gaming\\Desktop\\javaPets.txt");
+for(int i=0;i<pets.size();i++) {
+file.write(String.format("%s %d\n", pets.get(i).getName(), pets.get(i).getAge()));
+}
+// close the file
+file.close();
+} catch (IOException e) {
+// print error message
+System.err.println("Can not save Data!");
+e.printStackTrace();
+}
+}
+
+
+//Adds pets.
+private static void addMorePets(Scanner cin) {
 int count = 0;
 String petString = "";
 do {
 
 System.out.print("add pet (name, age): ");
-petString = scan.nextLine();
+petString = cin.nextLine();
 if (petString.equalsIgnoreCase("done")) {
 
 break;
@@ -102,7 +123,30 @@ count++;
 } while (!petString.equalsIgnoreCase("done"));
 System.out.println(count + " pets added.");
 }
+//Read in file, update pet
+ 
+private static void syncPetData(  ) throws FileNotFoundException {
+    File file = new File("C:\\Users\\Mobile Gaming\\Desktop\\javaPets.txt");
+ 
+    Scanner fin = new Scanner(file);
 
+    String petString = "";
+    int count = 0;
+    
+    while (fin.hasNextLine())
+    {
+        petString = fin.nextLine();
+     
+    String name = petString.split("\\s+")[0];
+    int age = Integer.parseInt(petString.split("\\s+")[1]);
+
+    pets.add(new Pet(name, age));
+    count++;
+
+    } 
+}
+ 
+  
 // Update pet.
 
 private static void updateExistingPet(Scanner cin) {
@@ -192,14 +236,9 @@ public static void menu() {
 System.out.println("What would like to do?");
 System.out.println(" 1) View all pets  ");
 System.out.println(" 2) Add more pets");
-System.out.println(" 3) Update an existing pet");
-System.out.println(" 4) Remove an existing pet");
-System.out.println(" 5) Search pets by name");
-System.out.println(" 6) Search pets by age");
-System.out.println(" 7) Exit program");
-
-        
-        
+System.out.println(" 3) Remove an existing pet");
+System.out.println(" 4) Exit Program");
  
+
 }
 }
